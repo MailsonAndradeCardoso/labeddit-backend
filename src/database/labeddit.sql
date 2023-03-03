@@ -77,3 +77,4 @@ VALUES
 ("p002", "u002", "Bye");
 
 SELECT * FROM posts;
+
