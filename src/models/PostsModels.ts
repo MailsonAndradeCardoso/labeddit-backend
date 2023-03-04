@@ -60,6 +60,20 @@ export class Posts{
          this.createdAt= value
     }
 
+    public addLikes(): void {
+        this.likes += 1;
+      }
+      public removeLikes(): void {
+        this.likes -= 1;
+      }
+
+      public addDislikes(): void {
+        this.likes += 1;
+      }
+      public removeDislikes(): void {
+        this.likes -= 1;
+      }
+
     public toModelPostDB(): PostDB{
         return{
             id: this.id,

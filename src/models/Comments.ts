@@ -12,7 +12,7 @@ export class Comments{
     ){}
 
     public getId(): string{
-        return this.id
+    return this.id
     }
 
     public setId(value: string): void{
@@ -67,6 +67,21 @@ export class Comments{
          this. createdAt = value
     }
 
+    public addLikes(): void {
+        this.like += 1;
+    }
+    
+    public removeLikes(): void {
+        this.like -= 1;
+    }
+
+    public addDislikes(): void {
+        this.dislike += 1;
+    }
+    public removeDislikes(): void {
+        this.dislike -= 1;
+    }
+
     public toModelCommentsDB(): ComentsDB{
         return{
             id: this.id,
@@ -76,8 +91,8 @@ export class Comments{
             likes: this.like,
             dislikes: this.dislike,
             created_at: this.createdAt,
-        }}
-        
+    }}
+    
     public toBusinessCommentsModels(): CommentsModels{
         return{
             id: this.id,
