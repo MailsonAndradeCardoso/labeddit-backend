@@ -24,6 +24,7 @@ export interface PostDB{
     id: string,
     user_id:string,
     content: string,
+    comment: string,
     like: number,
     dislikes: number,
     created_at: string
@@ -32,6 +33,7 @@ export interface PostDB{
 export interface PostModel{
     id: string,
     userId:string,
+    comment:string,
     content: string,
     like: number,
     dislikes: number,
@@ -80,4 +82,30 @@ export interface CommentsLikeDislikeModels{
     userId: string,
     postId: string,
     like: number
+}
+
+export interface PostsCreatorDB{
+    id: string,
+    content: string,
+    comment: string,
+    likes: number, 
+    dislikes: number,
+    createdAt: string,
+    user: {
+        id: string,
+        name: string
+    }
+}
+
+export interface CommentsCreatorDB {
+    id: string,
+    post_id: string,
+    comment: string,
+    likes: number,
+    dislikes: number,
+    created_at: string,
+    user: {
+        user_id: string,
+        name: string
+    }
 }

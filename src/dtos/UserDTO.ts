@@ -11,7 +11,7 @@ export interface SignupOutputDTO{
 
 export interface LoginInputDTO{
     email: unknown,
-    senha: unknown
+    password: unknown
 }
 
 export interface LoginOutputDTO {
@@ -21,3 +21,4 @@ export interface LoginOutputDTO {
 export interface LogoutOutputDTO{
     token: string
 }
+

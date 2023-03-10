@@ -1,4 +1,8 @@
 import { knex } from "knex"
+import dotenv from "dotenv"
+
+dotenv.config()
+
 
 export abstract class BaseDatabase {
     protected static connection = knex({
@@ -14,5 +18,4 @@ export abstract class BaseDatabase {
                 conn.run("PRAGMA foreign_keys = ON", cb)
             }
         }
-    })
-}
+    })}

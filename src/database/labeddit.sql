@@ -11,6 +11,7 @@ CREATE TABLE users (
 CREATE TABLE posts (
     id TEXT PRIMARY KEY UNIQUE NOT NULL,
     user_id TEXT NOT NULL,
+    comments TEXT,
     content TEXT NOT NULL,
     likes INTEGER DEFAULT (0) NOT NULL,
     dislikes INTEGER DEFAULT (0) NOT NULL,

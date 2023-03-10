@@ -1,99 +1,118 @@
 import { PostDB, PostModel } from "../types"
 
- 
-
-export class Posts{
-    constructor(
+export class Posts {
+    constructor (
     private id: string,
-    private userId: string,
     private content: string,
-    private likes: number,
+    private comment: string,
+    private likes: number, 
     private dislikes: number,
     private createdAt: string,
-    ){}
+    private user: {
+        id: string,
+        name: string
+    } 
+    ) {}
 
-    public getId(): string{
+    public getId(): string {
         return this.id
     }
 
-    public setId(value: string): void{
-         this.id = value
-    }
-    
-    public getUser_id(): string{
-        return this.user_id
+    public setId(value: string): void {
+        this.id = value
     }
 
-    public setUser_id(value: string): void{
-         this.user_id= value
-    }
-
-    public getContent(): string{
+    public getContent(): string {
         return this.content
     }
 
-    public setContent(value: string): void{
-         this.content= value
+    public setContent(value: string): void {
+        this.content = value
     }
 
-    public getLikes(): number{
+    public getComment(): string {
+        return this.comment
+    }
+
+    public setComment(value: string): void {
+        this.comment = value
+    }
+
+    public getLikes(): number {
         return this.likes
     }
 
-    public setLikes(value: number): void{
-         this.likes= value
+    public setLikes(value: number): void {
+        this.likes = value
     }
 
-    public getDisLikes(): number{
+    public addLike() {
+        this.likes += 1
+    }
+
+    public removeLike() {
+        this.likes -= 1
+    }
+
+    public getDislikes(): number {
         return this.dislikes
     }
 
-    public setDisLikes(value: number): void{
-         this.dislikes= value
+    public setDislikes(value: number): void {
+        this.dislikes = value
+    }
+public addDislike() {
+        this.dislikes += 1
     }
 
-    public getCreateAt(): string{
+    public removeDislike() {
+        this.dislikes -= 1
+    }
+
+
+    public getCreatedAt(): string {
         return this.createdAt
     }
 
-    public setCreatedAt(value: string): void{
-         this.createdAt= value
+    public setCreatedAt(value: string): void {
+        this.createdAt = value
     }
 
-    public addLikes(): void {
-        this.likes += 1;
-      }
-      public removeLikes(): void {
-        this.likes -= 1;
-      }
-
-      public addDislikes(): void {
-        this.likes += 1;
-      }
-      public removeDislikes(): void {
-        this.likes -= 1;
-      }
-
-    public toModelPostDB(): PostDB{
-        return{
-            id: this.id,
-            user_id: this.userId,
-            content: this.content,
-            like: this.likes,
-            dislikes: this.dislikes,
-            created_at: this.createdAt
-        }
+    public getUser():{
+        id: string,
+        name: string,
+    }{
+        return this.user
     }
 
-    public toBusinessPostsModels(): PostModel{
-        return{
-            id: this.id,
-            userId: this.userId,
-            content: this.content,
-            like: this.likes,
-            dislikes: this.dislikes,
-            createdAt: this.createdAt
-        }
+    public setUser(value :{
+        id: string,
+        name: string,
+    }){
+        this.user = value
     }
 
+    public toModelsPostsDB(): PostDB {
+        return {
+        id: this.id,
+        user_id: this.user.id,
+        content: this.content,
+        comment: this.comment,
+        like: this.likes,
+        dislikes: this.dislikes,
+        created_at: this.createdAt
+        } 
+    }
+
+    public toBusinessPostsModels(): PostModel {
+        return {
+        id: this.id,
+        userId: this.user.id,
+        content: this.content,
+        comment: this.comment,
+        like: this.likes,
+        dislikes: this.dislikes,
+        createdAt: this.createdAt
+        } 
+    }
 }
