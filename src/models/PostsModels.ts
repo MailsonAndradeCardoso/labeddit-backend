@@ -1,4 +1,4 @@
-import { PostDB, PostModel } from "../types"
+import { ComentsDB, CommentsCreatorDB, CommentsModels, PostDB, PostModel } from "../types"
 
 export class Posts {
     constructor (
@@ -11,7 +11,8 @@ export class Posts {
     private user: {
         id: string,
         name: string
-    } 
+    },
+    private comment_post : CommentsCreatorDB
     ) {}
 
     public getId(): string {
@@ -114,5 +115,28 @@ public addDislike() {
         dislikes: this.dislikes,
         createdAt: this.createdAt
         } 
+    }
+
+    public toCommentModelDB(): ComentsDB{
+        return {
+            id: this.id,
+            user_id: this.user.id,
+            post_id: this.comment_post.post_id,
+            comment: this.comment,
+            likes: this.likes,
+            dislikes: this.dislikes,
+            created_at: this.createdAt        
+        }
+    }
+    public ToBusinessCommentsModels() :  CommentsModels{
+        return{
+        id: this.id,
+        userId: this.user.id,
+        postId: this.comment_post.post_id,
+        comment: this.comment,
+        likes: this.likes,
+        dislikes: this.dislikes,
+        createdAt: this.createdAt
+        }
     }
 }

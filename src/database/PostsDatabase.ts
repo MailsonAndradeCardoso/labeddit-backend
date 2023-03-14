@@ -1,10 +1,11 @@
-import { PostDB, PostsCreatorDB } from "../types";
+import { ComentsDB, PostDB, PostsCreatorDB } from "../types";
 import { BaseDatabase } from "./BaseDatabase";
 import { UserDatabase } from "./UserDataBase";
 
 export class PostsDatabase extends BaseDatabase {
     public static TABLE_POSTS = "posts"
     public static TABLE_USERS = "users"
+    public static TABLE_COMMENTS = "users"
 
     public getAllPosts = async () => {
         const result = await BaseDatabase
@@ -30,6 +31,7 @@ export class PostsDatabase extends BaseDatabase {
         const result = await BaseDatabase
         .connection(PostsDatabase.TABLE_POSTS)
         .insert(postDB)
+        
     }
 
     public getPostById = async (id: string):Promise <PostDB | undefined> =>{
@@ -39,6 +41,19 @@ export class PostsDatabase extends BaseDatabase {
         .where({id:id})
         
         return result[0]
+    }
+
+    public creatComment = async (newCommentDB: ComentsDB) =>{
+        await BaseDatabase
+        .connection(PostsDatabase.TABLE_COMMENTS)
+        .insert(newCommentDB)
+    }
+
+    public updatePost = async (newUpdatePostDB: PostDB, id: string) =>{
+        await BaseDatabase
+        .connection(PostsDatabase.TABLE_POSTS)
+        .update(newUpdatePostDB)
+        .where({id:id})
     }
     
     }

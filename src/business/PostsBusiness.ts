@@ -50,7 +50,8 @@ export class PostsBusiness{
                 postDB.likes,
                 postDB.dislikes,
                 postDB.created_at,
-                creator(postDB.user_id)
+                creator(postDB.user_id),
+                postDB.comments_post,
             )
 
             return post.toBusinessPostsModels()
@@ -96,7 +97,19 @@ export class PostsBusiness{
             0,
             created_at,
             {id:  user_id,
-            name: payload.apelido}
+            name: payload.apelido},
+            {
+                id:"",
+                post_id: "",
+                comment: "",
+                likes: 0,
+                dislikes: 0,
+                created_at: "",
+                user: {
+                    user_id:"",
+                    name: ""
+                }
+            }
         )
 
         const postsDB = newPost.toModelsPostsDB()
@@ -122,12 +135,70 @@ export class PostsBusiness{
         }
 
         const filterPostById = await this.postsDatabase.getPostById(id_post)
-
+        const payload = this.tokenManager.getPayload(token)
+        if (payload === null) {
+            throw new BadRequestError ("'Token' inválido")
+        }
+        
         if(!filterPostById){
             throw new BadRequestError("post não encontrado");
             
         }
 
-        
+        const id = this.idGenerator.generate()
+        const content = ''
+        const likes = 0
+        const dislikes = 0
+        const created_at = new Date().toISOString()
+        const user_id = payload.id
+
+        const newComment = new Posts (
+            id, 
+            content,
+            comment,
+            likes,
+            dislikes, 
+            created_at,
+            {id: user_id,
+            name: payload.apelido},
+            {id: '',
+            post_id: '',
+            comment: '',
+            likes: 0,
+            dislikes: 0,
+            created_at: '',
+                user: {
+                    user_id: '',
+                    name: ''
+            }
+            }
+        )
+
+        const updatePost = new Posts (
+            filterPostById.id, 
+            filterPostById.content,
+            filterPostById.comment,
+            filterPostById.like,
+            filterPostById.dislikes,
+            filterPostById.created_at,
+            {id: user_id,
+            name:payload.apelido},
+            {id: '',
+            post_id: '',
+            comment: '',
+            likes: 0,
+            dislikes: 0,
+            created_at: '',
+                user: {
+                    user_id: '',
+                    name: ''
+            }
+            }
+        )
+
+        const newCommentDB = newComment.toCommentModelDB()
+        await this.postsDatabase.creatComment(newCommentDB)
+        const newUpdatePostDB =  updatePost.toModelsPostsDB()
+        await this.postsDatabase.updatePost(newUpdatePostDB, filterPostById.id)
     }
 }
