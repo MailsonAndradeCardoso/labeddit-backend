@@ -1,5 +1,5 @@
 import { PostsDatabase } from "../database/PostsDatabase";
-import { CreateCommentInput, CreatePostInput, GetPostOutput, GetPostsInput } from "../dtos/PostsDTO";
+import { CreateCommentInput, CreatePostInput, GetPostOutput, GetPostsInput, LikeOrDislikeInput } from "../dtos/PostsDTO";
 import { BadRequestError } from "../errors/BadRequest";
 import { NotFoundError } from "../errors/NotFoudError";
 import { Posts } from "../models/PostsModels";
@@ -201,4 +201,122 @@ export class PostsBusiness{
         const newUpdatePostDB =  updatePost.toModelsPostsDB()
         await this.postsDatabase.updatePost(newUpdatePostDB, filterPostById.id)
     }
-}
+
+    public likeOrDislike = async (input: LikeOrDislikeInput): Promise <void> =>{
+        const {idToLikeDislike, token, like} = input
+        const payload = this.tokenManager.getPayload(token)
+            if(payload === null){
+            throw new BadRequestError("token invalido")}
+
+            if(token === undefined){
+            throw new BadRequestError("token invalido")}
+
+            if(like !== "boolean"){
+            throw new BadRequestError("like invalido, deve ser boolean")
+            
+            }
+        
+        const postToLike = await this.postsDatabase.getPostById(idToLikeDislike)
+        const commentToLike = await this.postsDatabase.getCommentById(idToLikeDislike)
+
+        if(!postToLike){
+            throw new NotFoundError("post inexistente")
+        }
+
+        if(!commentToLike){
+            throw new NotFoundError("comment inexistente")
+        }
+
+        if(postToLike){
+            let like = postToLike.like
+            let dislikes = postToLike.dislikes
+
+            if(like === 0){
+                dislikes++
+            }else if(like === 1){
+                like++
+            }else{
+                throw new BadRequestError("é nada")
+            }
+        }
+
+        const sendLike = new Posts (
+            postToLike.id, 
+            postToLike.content,
+            postToLike.comment,
+            postToLike.like,
+            postToLike.dislikes,
+            postToLike.created_at,
+            {id: postToLike.id,
+            name:payload.apelido},
+            {id: '',
+            post_id: '',
+            comment: '',
+            likes: 0,
+            dislikes: 0,
+            created_at: '',
+                user: {
+                    user_id: '',
+                    name: ''
+            }
+            }
+
+
+        )   
+            
+            const updateLike = {
+                user_id: payload.id,
+                post_id: idToLikeDislike,
+                like: 1
+            }
+
+            const postLikeDB = sendLike.toModelsPostsDB()
+            await this.postsDatabase.updatePost(postLikeDB, idToLikeDislike)
+            await this.postsDatabase.likeDislike(updateLike)
+
+            if(commentToLike){
+                let like = commentToLike.like
+                let dislikes = commentToLike.dislikes
+        
+                if(like === 0){
+                    dislikes++
+                }else if(like === 1){
+                    like++
+                }else{
+                    throw new BadRequestError("é não")
+                }
+    }
+
+    const commentLike = new Posts (
+        idToLikeDislike, 
+        commentToLike.content,
+        commentToLike.comment,
+        commentToLike.like,
+        commentToLike.dislikes,
+        commentToLike.created_at,
+        {id: postToLike.id,
+        name:payload.apelido},
+        {id: '',
+        post_id: '',
+        comment: '',
+        likes: 0,
+        dislikes: 0,
+        created_at: '',
+            user: {
+                user_id: '',
+                name: ''
+        }
+        }
+    )   
+
+    const updateComment = {
+        user_id: payload.id,
+        comment_id: idToLikeDislike,
+        like: 1
+    }
+
+    const commentLikeDB = commentLike.toModelsPostsDB()
+    await this.postsDatabase.updateComments(commentLikeDB, idToLikeDislike)
+    await this.postsDatabase.updateLikeOrDislikeComment(updateComment)
+   
+    }}

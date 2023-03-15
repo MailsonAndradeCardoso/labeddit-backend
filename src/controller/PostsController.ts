@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { PostsBusiness } from "../business/PostsBusiness";
-import { CreateCommentInput, CreatePostInput, GetPostsInput } from "../dtos/PostsDTO";
+import { CreateCommentInput, CreatePostInput, GetPostsInput, LikeOrDislikeInput } from "../dtos/PostsDTO";
 import { BaseError } from "../errors/BaseErrors";
 
 export class PostsController {
@@ -62,8 +62,33 @@ public createComment =  async (req: Request, res: Response) =>{
 
         res.status(201).send(output)
 
-        } catch (error) {
-        console.log(error)
+        }catch (error) {
+            console.log(error)
+    
+            if (error instanceof BaseError) {
+                res.status(error.statusCode)}
+            else{
+                res.status(500).send("erro inesperado")
         }
-}
     }
+}
+
+public likeOrDislike = async (req:Request, res: Response)=>{
+    try {
+
+        const input : LikeOrDislikeInput = {
+            idToLikeDislike: req.params.id,
+            token: req.headers.authorization as string,
+            like: req.body.like
+}
+    await this.postsBusiness.likeOrDislike(input)
+    
+    }catch (error) {
+        console.log(error)
+
+        if (error instanceof BaseError) {
+            res.status(error.statusCode)}
+        else{
+            res.status(500).send("erro inesperado")
+    }
+}}}

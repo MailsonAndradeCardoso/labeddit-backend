@@ -1,4 +1,5 @@
 import { ComentsDB, CommentsCreatorDB, CommentsModels, PostDB, PostModel } from "../types"
+import { LikeOrDislikeInput } from "../dtos/PostsDTO"
 
 export class Posts {
     constructor (
